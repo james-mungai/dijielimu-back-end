@@ -4,10 +4,13 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
-    name:{
+    firstName:{
         type: String,
         required: true,
-
+    },
+    secondName:{
+        type: String,
+        required: true,
     },
     age:{
         type: Number,
@@ -33,6 +36,7 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true,
+        trim: true,
         validate(value){
             if(value.includes('password')){
                 throw new Error('password cannot contain the word password')
@@ -40,31 +44,40 @@ const userSchema = new mongoose.Schema({
                 throw new Error('password must be minimum 6 characters')
             }
         }
-
-
     },
-    tokens: [{
-        token:{
-            type: String,
-            required:true
-        }
-    }],
+    
     avatar:{
         type: Buffer,
         required: false
+    },
+    isStudent:{
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    isTutor:{
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    isAdmin:{
+        type: String,
+        required: true,
+        default: false
     }
 },{
-    timestamps: true
+    timestamps: true,
+    toJSON: {virtuals: true}
 })
-userSchema.virtual('tasks',{
-    ref: 'Task',
+userSchema.virtual('mySubscriptions',{
+    ref: 'Subscription',
     localField: '_id',
-    foreignField: 'author'
+    foreignField: 'user'
 })
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
-    console.log(process.env.JSON_WEB_TOKEN_SECRET_KEY)
-    const token = await jwt.sign({_id:user._id}, 'my key')
+    const token = await jwt.sign({_id:user._id}, process.env.JSON_WEB_TOKEN_SECRET_KEY)
     
     return token
 }
