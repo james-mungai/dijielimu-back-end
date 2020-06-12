@@ -1,6 +1,10 @@
 {
-  "name": "task-app",
+  "name": "diji-elimu",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.13.1",
+    "npm": "6.13.2"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -28,7 +32,6 @@
   "devDependencies": {
     "env-cmd": "^10.0.1",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.1",
-    "supertest": "^4.0.2"
+    "nodemon": "^1.19.1"
   }
 }
